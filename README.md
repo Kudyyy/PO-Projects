@@ -1,2 +1,2 @@
 # PO-Projects
-Projects for study.
+Projects for studies.
