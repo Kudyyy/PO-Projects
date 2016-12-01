@@ -3,6 +3,7 @@
  */
 
 import java.util.*;
+import java.lang.Object;
 
 public class Constitution {
     private Vector<Chapter> Chapters;
@@ -10,6 +11,16 @@ public class Constitution {
 
     public Constitution(FileParser file){
         String[] linesOfFile = file.fileToString().split(System.getProperty("line.separator"));
+        for (String line: linesOfFile) {
+            boolean upper = true;
+            for(char ch: line.toCharArray()){
+                //System.out.println(ch);
+                if (ch == ' ') continue;
+                if (ch == '\n') continue;
+                if (Character.isLowerCase(ch)) upper = false;
+            }
+            if (upper) System.out.println(line);
+        }
         int iter=0;
         String intro = "";
         for (int i=0; i<linesOfFile.length; i++){
@@ -20,13 +31,13 @@ public class Constitution {
             }
             intro+=linesOfFile[i]+"\n";
         }
-        String chapter="";
+        /*String chapter="";
         String article="";
         for (int i=iter; i<linesOfFile.length; i++){
             if (linesOfFile[i].matches("Rozdział [XVI]*")){
                 System.out.println(linesOfFile[i]);
             }
-        }
+        }*/
     }
 
     public String getIntroduction(){

@@ -21,7 +21,7 @@ public class FileParser {
     public String fileToString(){
         try (Stream<String> stream = Files.lines(Paths.get(filePath))) {
             String result = "";
-            for (String line : stream.filter(s -> s.length()>1).toArray(String[]::new)){
+            for (String line : stream.filter(s -> s.length()>1 && !s.matches("[0-9][0-9][0-9][0-9]-[0-9][0-9]-[0-9][0-9]") && !s.matches("©Kancelaria Sejmu")).toArray(String[]::new)){
                 result+=line+"\n";
             }
             return result;
