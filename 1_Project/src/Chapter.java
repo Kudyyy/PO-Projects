@@ -6,21 +6,28 @@ import java.util.*;
 
 public class Chapter {
 
-    private Vector<Article> articles;
+    private Vector<Section> sections;
     private final int numberOfChapter;
+    private final String description;
     private int numberOfFirstArticle = 0;
     private int numberOfLastArticle = 0;
 
-    public Chapter(int chapterNumber){
-        numberOfChapter = chapterNumber;
-        articles = new Vector<Article>();
+
+    public Chapter(String desc){
+        description=desc;
+        numberOfChapter = new RomanToArabicConverter().convertRomanToArabic(desc.split(" ")[1]);
+        sections = new Vector<Section>();
     }
 
     public void setRangeOfArticles(){
-        if (articles != null) {
-            numberOfFirstArticle = articles.firstElement().getNumberOfArt();
-            numberOfLastArticle = articles.lastElement().getNumberOfArt();
+        if (!sections.isEmpty()) {
+            numberOfFirstArticle = sections.firstElement().getNumberOfFirstArticle();
+            numberOfLastArticle = sections.lastElement().getNumberOfLastArticle();
         }
+    }
+
+    public String getDescription(){
+        return description;
     }
 
     public int getNumberOfFirstArticle(){
@@ -31,8 +38,8 @@ public class Chapter {
         return numberOfLastArticle;
     }
 
-    public void addArticle(Article art){
-        articles.addElement(art);
+    public void addSection(Section sec){
+        sections.addElement(sec);
     }
 
     public int getNumberOfChapter(){
@@ -40,25 +47,27 @@ public class Chapter {
     }
 
     public String toStringForArticle(int articleNumber){
-        for (Article article: articles){
-            if (articleNumber == article.getNumberOfArt()) return "Art."+article.getNumberOfArt()+"\n"+article.toString();
+        for (Section section: sections){
+            if (articleNumber >= section.getNumberOfFirstArticle() && articleNumber <= section.getNumberOfLastArticle()){
+                return description+"\n"+section.toStringForArticle(articleNumber);
+            }
         }
         return "Did not find article with number " + articleNumber;
     }
 
     public String toStringForArticlesInRange(int firstArt, int lastArt){
         if(firstArt > numberOfLastArticle || lastArt < numberOfFirstArticle) return "Did not find articles in range <"+firstArt+","+lastArt+">";
-        String result = "";
-        for (Article article: articles){
-            if (firstArt <= article.getNumberOfArt() && lastArt >= article.getNumberOfArt()) result += "Art."+article.getNumberOfArt()+"\n"+article.toString()+"\n";
+        String result = description+"\n";
+        for (Section section: sections){
+            if (firstArt <= section.getNumberOfLastArticle() && lastArt >= section.getNumberOfFirstArticle()) result += section.toStringForArticlesInRange(firstArt,lastArt)+"\n";
         }
         return result;
     }
 
     public String toString(){
-        String result = "Chapter number: "+numberOfChapter+"\n";
-        for(Article article :articles) {
-            result += article.toString()+"\n";
+        String result = description+"\n";
+        for(Section section :sections) {
+            result += section.toString()+"\n";
         }
         return result;
     }

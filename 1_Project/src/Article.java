@@ -3,11 +3,12 @@
  */
 public class Article {
 
-    private String content;
+    private final String content;
     private final int numberOfArt;
 
-    public Article(int articleNumber){
+    public Article(int articleNumber,String cont){
         numberOfArt = articleNumber;
+        content = cont;
     }
 
     public String toString(){

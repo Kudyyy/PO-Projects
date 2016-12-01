@@ -6,21 +6,58 @@ import java.util.*;
 import java.lang.Object;
 
 public class Constitution {
-    private Vector<Chapter> Chapters;
+    private Vector<Chapter> chapters = new Vector<Chapter>();
     private Introduction introduction;
 
     public Constitution(FileParser file){
-        String[] linesOfFile = file.fileToString().split(System.getProperty("line.separator"));
-        for (String line: linesOfFile) {
-            boolean upper = true;
-            for(char ch: line.toCharArray()){
-                //System.out.println(ch);
-                if (ch == ' ') continue;
-                if (ch == '\n') continue;
-                if (Character.isLowerCase(ch)) upper = false;
-            }
-            if (upper) System.out.println(line);
+        this.divideTextToObjects(file);
+    }
+
+    public String getIntroduction(){
+        return introduction.toString();
+    }
+
+    public void addChapter(Chapter chapter){
+        chapters.addElement(chapter);
+    }
+
+    public String toStringForChapter(int chapterNumber){
+        for (Chapter chapter : chapters){
+            if (chapterNumber == chapter.getNumberOfChapter()) return chapter.toString();
         }
+        return "Did not find chapter with number " + chapterNumber;
+    }
+
+    public String toStringForArticle(int articleNumber){
+        for (Chapter chapter : chapters){
+            if (chapter.getNumberOfFirstArticle() <= articleNumber && articleNumber <= chapter.getNumberOfLastArticle()){
+                return chapter.toStringForArticle(articleNumber);
+            }
+        }
+        return "Did not find article with number " + articleNumber;
+    }
+
+    public String toStringForArticlesInRange(int firstArt, int lastArt){
+        String result = "";
+        for (Chapter chapter : chapters){
+            if (firstArt <= chapter.getNumberOfLastArticle() && lastArt >= chapter.getNumberOfFirstArticle()){
+                result += "\n"+chapter.toStringForArticlesInRange(firstArt,lastArt);
+            }
+        }
+        if (result.isEmpty()) return "Did not find articles in range <"+firstArt+","+lastArt+">";
+        else return result;
+    }
+
+    public String toString(){
+        String result = introduction.toString()+"\n";
+        for (Chapter chapter : chapters){
+            result+=chapter.toString()+"\n";
+        }
+        return result;
+    }
+
+    public void divideTextToObjects(FileParser file){
+        String[] linesOfFile = file.fileToString().split(System.getProperty("line.separator"));
         int iter=0;
         String intro = "";
         for (int i=0; i<linesOfFile.length; i++){
@@ -31,49 +68,81 @@ public class Constitution {
             }
             intro+=linesOfFile[i]+"\n";
         }
-        /*String chapter="";
-        String article="";
+        Article article = null;
+        int artNum=0;
+        String artCont="";
+        Chapter chapter = null;
+        Section section = null;
+        String secDesc;
+        int secCount;
+        boolean upper = true;
+        boolean foundSection;
+        boolean newChapter = false;
         for (int i=iter; i<linesOfFile.length; i++){
+            foundSection = false;
+            secDesc="";
             if (linesOfFile[i].matches("Rozdział [XVI]*")){
-                System.out.println(linesOfFile[i]);
+                if (article != null) {
+                    article = new Article(artNum,artCont);
+                    section.addArticle(article);
+                    artCont = "";
+                }
+                if (section != null) {
+                    section.setRangeOfArticles();
+                    chapter.addSection(section);
+                }
+                newChapter = true;
+                if (chapter != null){
+                    chapter.setRangeOfArticles();
+                    chapters.addElement(chapter);
+                }
+                chapter = new Chapter(linesOfFile[i]);
+                continue;
             }
-        }*/
-    }
-
-    public String getIntroduction(){
-        return introduction.toString();
-    }
-
-    public void addChapter(Chapter chapter){
-        Chapters.addElement(chapter);
-    }
-
-    public String toStringForChapter(int chapterNumber){
-        for (Chapter chapter : Chapters){
-            if (chapterNumber == chapter.getNumberOfChapter()) return chapter.toString();
-        }
-        return "Did not find chapter with number " + chapterNumber;
-    }
-
-    public String toStringForArticle(int articleNumber){
-        for (Chapter chapter : Chapters){
-            if (chapter.getNumberOfFirstArticle() <= articleNumber && articleNumber <= chapter.getNumberOfLastArticle()){
-                return chapter.toStringForArticle(articleNumber);
+            upper = true;
+            for(char ch: linesOfFile[i].toCharArray()){
+                //System.out.println(ch);
+                if (Character.isLowerCase(ch) && ch != ' ' && ch != '\n' ) {
+                    upper = false;
+                    break;
+                }
             }
-        }
-        return "Did not find article with number " + articleNumber;
-    }
-
-    public String toStringForArticlesInRange(int firstArt, int lastArt){
-        String result = "";
-        for (Chapter chapter : Chapters){
-            if (firstArt <= chapter.getNumberOfLastArticle() && lastArt >= chapter.getNumberOfFirstArticle()){
-                result += "\n"+"Rodział nr."+chapter.getNumberOfChapter()+"\n"+chapter.toStringForArticlesInRange(firstArt,lastArt);
+            while (upper){
+                foundSection = true;
+                secDesc += linesOfFile[i]+" ";
+                i++;
+                //System.out.println(secDesc);
+                for(char ch: linesOfFile[i].toCharArray()){
+                    //System.out.println(ch);
+                    if (Character.isLowerCase(ch) && ch != ' ' && ch != '\n' ) {
+                        upper = false;
+                        i--;
+                        break;
+                    }
+                }
             }
-        }
-        if (result.isEmpty()) return "Did not find articles in range <"+firstArt+","+lastArt+">";
-        else return result;
-    }
+            if(foundSection){
+                if (section != null && !newChapter){
+                    section.setRangeOfArticles();
+                    chapter.addSection(section);
+                }
+                section = new Section(secDesc);
+            }
 
+            else if (linesOfFile[i].matches("Art. [0-9]{1,3}.")){
+                if (!newChapter){
+                    article = new Article(artNum,artCont);
+                    section.addArticle(article);
+                    artCont = "";
+                }
+                artNum=Integer.parseInt(linesOfFile[i].substring(0,linesOfFile[i].length()-1).split(" ")[1]);
+                //System.out.println(artNum);
+                newChapter = false;
+            }
+            else artCont += linesOfFile[i]+"\n";
+
+
+        }
+    }
 
 }
