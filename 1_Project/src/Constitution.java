@@ -3,7 +3,6 @@
  */
 
 import java.util.*;
-import java.lang.Object;
 
 public class Constitution implements Articles {
     private final Vector<Chapter> chapters = new Vector<Chapter>();
@@ -117,7 +116,6 @@ public class Constitution implements Articles {
             }
             upper = true;
             for(char ch: linesOfFile[i].toCharArray()){
-                //System.out.println(ch);
                 if (Character.isLowerCase(ch) && ch != ' ' && ch != '\n' ) {
                     upper = false;
                     break;
@@ -127,9 +125,7 @@ public class Constitution implements Articles {
                 foundSection = true;
                 secDesc += linesOfFile[i]+" ";
                 i++;
-                //System.out.println(secDesc);
                 for(char ch: linesOfFile[i].toCharArray()){
-                    //System.out.println(ch);
                     if (Character.isLowerCase(ch) && ch != ' ' && ch != '\n' ) {
                         upper = false;
                         i--;
@@ -156,7 +152,6 @@ public class Constitution implements Articles {
                     artCont = "";
                 }
                 artNum=Integer.parseInt(linesOfFile[i].substring(0,linesOfFile[i].length()-1).split(" ")[1]);
-                //System.out.println(artNum);
                 newChapter = false;
                 newSection = false;
             }

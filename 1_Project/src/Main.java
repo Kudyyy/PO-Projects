@@ -26,6 +26,5 @@ public class Main {
             System.exit(1);
         }
 
-        //System.out.println(Konstytucja.toStringForArticlesInRange(170,175));
     }
 }
