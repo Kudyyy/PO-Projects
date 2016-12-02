@@ -13,6 +13,7 @@ public class Constitution implements Articles {
 
     public Constitution(FileParser file){
         this.divideConstitutionToObjects(file);
+        setRangeOfArticles();
     }
 
     public int getNumberOfFirstArticle(){ return numberOfFirstArticle;}
@@ -58,6 +59,7 @@ public class Constitution implements Articles {
         if (result.isEmpty()) return "Did not find articles in range <"+firstArt+","+lastArt+">";
         else return result;
     }
+
 
     public String toString(){
         String result = introduction.toString()+"\n";
