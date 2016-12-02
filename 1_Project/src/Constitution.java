@@ -49,13 +49,14 @@ public class Constitution implements Articles {
     }
 
     public String toStringForArticlesInRange(int firstArt, int lastArt){
+        if (firstArt >= lastArt) return "Bad range, first number has to be smaller then second";
         String result = "";
         for (Chapter chapter : chapters){
             if (firstArt <= chapter.getNumberOfLastArticle() && lastArt >= chapter.getNumberOfFirstArticle()){
                 result += "\n"+chapter.toStringForArticlesInRange(firstArt,lastArt);
             }
         }
-        if (result.isEmpty()) return "Did not find articles in range <"+firstArt+","+lastArt+">";
+        if (result.isEmpty()) return "Did not find articles in range <"+firstArt+","+lastArt+">, or range out of scope";
         else return result;
     }
 
@@ -159,6 +160,12 @@ public class Constitution implements Articles {
 
 
         }
+        article = new Article(artNum,artCont);
+        section.addArticle(article);
+        section.setRangeOfArticles();
+        chapter.addSection(section);
+        chapter.setRangeOfArticles();
+        chapters.addElement(chapter);
     }
 
 }

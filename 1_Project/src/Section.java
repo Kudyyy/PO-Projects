@@ -45,7 +45,8 @@ public class Section implements Articles{
     }
 
     public String toStringForArticlesInRange(int firstArt, int lastArt){
-        if(firstArt > numberOfLastArticle || lastArt < numberOfFirstArticle) return "Did not find articles in range <"+firstArt+","+lastArt+">";
+        if (firstArt >= lastArt) return "Bad range, first number has to be smaller then second";
+        if(firstArt > numberOfLastArticle || lastArt < numberOfFirstArticle) return "Did not find articles in range <"+firstArt+","+lastArt+">, or range out of scope";
         String result = description+"\n";
         for (Article article: articles){
             if (firstArt <= article.getNumberOfArt() && lastArt >= article.getNumberOfArt()) result += "Art. "+article.getNumberOfArt()+".\n"+article.toString()+"\n";
