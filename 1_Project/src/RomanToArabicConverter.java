@@ -15,11 +15,11 @@ public class RomanToArabicConverter {
         values.put('I',1);
         values.put('V',5);
         values.put('X',10);
-        values.put('L',50);
-        values.put('C',100);
-        values.put('D',500);
-        values.put('M',1000);
         Vector<Integer> result = new Vector<Integer>();
+        if (roman.matches("(.*)([^IVX]+)(.*)")){
+            System.out.println("Could not resolve roman : " + roman +". Probably out of range.");
+            System.exit(1);
+        }
         for (char character:roman.toCharArray()) {
             result.addElement(values.get(character));
         }

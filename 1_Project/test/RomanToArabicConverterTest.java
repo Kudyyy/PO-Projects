@@ -7,6 +7,7 @@ public class RomanToArabicConverterTest extends TestCase {
     public void testConvertRomanToArabic() throws Exception {
         assertEquals(7,RomanToArabicConverter.convertRomanToArabic("VII"));
         assertEquals(9,RomanToArabicConverter.convertRomanToArabic("IX"));
+        assertEquals(17,RomanToArabicConverter.convertRomanToArabic("XVII"));
     }
 
 }

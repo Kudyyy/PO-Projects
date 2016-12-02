@@ -9,7 +9,6 @@ public class Main {
         }
         FileParser file = new FileParser(args[0]);
         Constitution Konstytucja = new Constitution(file);
-        System.out.println(Konstytucja.toString());
         if (args[1].matches("A\\d{1,3}")){
             System.out.println(Konstytucja.toStringForArticle(Integer.parseInt(args[1].substring(1,args[1].length()))));
         }
