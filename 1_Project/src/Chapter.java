@@ -4,9 +4,9 @@
 
 import java.util.*;
 
-public class Chapter {
+public class Chapter implements Articles{
 
-    private Vector<Section> sections;
+    private final Vector<Section> sections;
     private final int numberOfChapter;
     private final String description;
     private int numberOfFirstArticle = 0;
@@ -15,7 +15,7 @@ public class Chapter {
 
     public Chapter(String desc){
         description=desc;
-        numberOfChapter = new RomanToArabicConverter().convertRomanToArabic(desc.split(" ")[1]);
+        numberOfChapter = RomanToArabicConverter.convertRomanToArabic(desc.split(" ")[1]);
         sections = new Vector<Section>();
     }
 

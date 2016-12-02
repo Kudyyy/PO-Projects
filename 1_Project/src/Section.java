@@ -3,9 +3,9 @@ import java.util.Vector;
 /**
  * Created by klodka on 2016-12-01.
  */
-public class Section {
+public class Section implements Articles{
 
-    private Vector<Article> articles = new Vector<Article>();
+    private final Vector<Article> articles = new Vector<Article>();
     private int numberOfFirstArticle = 0;
     private int numberOfLastArticle = 0;
     private final String description;

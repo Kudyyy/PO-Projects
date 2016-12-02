@@ -9,6 +9,7 @@ public class Introduction {
     }
 
     public Introduction(String intro){
-        content = intro;
+        content = TransferRemover.deleteTransfers(intro);
     }
+
 }

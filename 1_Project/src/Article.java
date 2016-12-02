@@ -7,8 +7,9 @@ public class Article {
     private final int numberOfArt;
 
     public Article(int articleNumber,String cont){
+
         numberOfArt = articleNumber;
-        content = cont;
+        content = TransferRemover.deleteTransfers(cont);
     }
 
     public String toString(){
@@ -17,4 +18,5 @@ public class Article {
     public int getNumberOfArt(){
         return numberOfArt;
     }
+
 }

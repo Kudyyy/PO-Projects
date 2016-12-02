@@ -5,12 +5,23 @@
 import java.util.*;
 import java.lang.Object;
 
-public class Constitution {
-    private Vector<Chapter> chapters = new Vector<Chapter>();
+public class Constitution implements Articles {
+    private final Vector<Chapter> chapters = new Vector<Chapter>();
     private Introduction introduction;
+    private int numberOfFirstArticle = 0;
+    private int numberOfLastArticle = 0;
 
     public Constitution(FileParser file){
-        this.divideTextToObjects(file);
+        this.divideConstitutionToObjects(file);
+    }
+
+    public int getNumberOfFirstArticle(){ return numberOfFirstArticle;}
+    public int getNumberOfLastArticle(){ return numberOfLastArticle;}
+    public void setRangeOfArticles(){
+        if(!chapters.isEmpty()){
+            numberOfFirstArticle = chapters.firstElement().getNumberOfFirstArticle();
+            numberOfLastArticle = chapters.lastElement().getNumberOfLastArticle();
+        }
     }
 
     public String getIntroduction(){
@@ -56,7 +67,9 @@ public class Constitution {
         return result;
     }
 
-    public void divideTextToObjects(FileParser file){
+
+
+    public void divideConstitutionToObjects(FileParser file){
         String[] linesOfFile = file.fileToString().split(System.getProperty("line.separator"));
         int iter=0;
         String intro = "";
@@ -78,6 +91,7 @@ public class Constitution {
         boolean upper = true;
         boolean foundSection;
         boolean newChapter = false;
+        boolean newSection = false;
         for (int i=iter; i<linesOfFile.length; i++){
             foundSection = false;
             secDesc="";
@@ -123,14 +137,18 @@ public class Constitution {
             }
             if(foundSection){
                 if (section != null && !newChapter){
+                    article = new Article(artNum,artCont);
+                    section.addArticle(article);
+                    artCont = "";
                     section.setRangeOfArticles();
                     chapter.addSection(section);
+                    newSection = true;
                 }
                 section = new Section(secDesc);
             }
 
             else if (linesOfFile[i].matches("Art. [0-9]{1,3}.")){
-                if (!newChapter){
+                if (!newChapter && !newSection){
                     article = new Article(artNum,artCont);
                     section.addArticle(article);
                     artCont = "";
@@ -138,6 +156,7 @@ public class Constitution {
                 artNum=Integer.parseInt(linesOfFile[i].substring(0,linesOfFile[i].length()-1).split(" ")[1]);
                 //System.out.println(artNum);
                 newChapter = false;
+                newSection = false;
             }
             else artCont += linesOfFile[i]+"\n";
 

@@ -9,9 +9,9 @@ import java.util.Vector;
 
 
 public class RomanToArabicConverter {
-    private Map<Character,Integer> values = new HashMap<Character, Integer>();
 
-    public RomanToArabicConverter(){
+    public static int convertRomanToArabic(String roman){
+        Map<Character,Integer> values = new HashMap<Character, Integer>();
         values.put('I',1);
         values.put('V',5);
         values.put('X',10);
@@ -19,9 +19,6 @@ public class RomanToArabicConverter {
         values.put('C',100);
         values.put('D',500);
         values.put('M',1000);
-    }
-
-    public int convertRomanToArabic(String roman){
         Vector<Integer> result = new Vector<Integer>();
         for (char character:roman.toCharArray()) {
             result.addElement(values.get(character));
